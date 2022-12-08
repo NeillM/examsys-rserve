@@ -1,6 +1,6 @@
 # examsys-rserve: A R-Server instance configured for ExamSys
 
-A R-server configured for ExamSys development.
+A R-server configured for ExamSys development. The image is based on the [RHub minimal image](https://github.com/r-hub/r-minimal)
 
 ## Example useage
 
@@ -13,7 +13,7 @@ docker run --name rserve -p 6311:6311 uonlearningtech/examsys-rserve:latest
 ## Features
 
 * Rserve
-* All packages requires to make it function with the supported ExamSys calculation methods.
+* All packages required to make it function with the supported ExamSys calculation methods.
 
 ## Also see
 
