@@ -19,4 +19,4 @@ docker run --name rserve -p 6311:6311 uonlearningtech/examsys-rserve:latest
 
 This container is used by:
 
-* [examsys-docker](https://bitbucket.org/examsys/examsys-docker) a docker composer based set of tools that setup a full ExamSys development environment.
+* [examsys-docker](https://github.com/examsys/examsys-docker) a docker composer based set of tools that setup a full ExamSys development environment.
