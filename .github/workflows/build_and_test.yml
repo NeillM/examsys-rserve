@@ -1,0 +1,58 @@
+name: Build and Test
+# Ensures that the image meets all the linting rules
+# Also that it builds and runs correctly
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - develop
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    env:
+      IMAGE_NAME: "examsys-reserve:test"
+      TESTPATH: './tests/fixtures'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test the Docker image
+        run:
+          docker build . --file Dockerfile --tag $IMAGE_NAME
+      - name: Start the image
+        run:
+          docker run --name examsystest -d -p 6311:6311 $IMAGE_NAME
+      - name: Stop docker image
+        run:
+          docker rm -f examsystest
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Docerfile
+        id: hadolint
+        uses: hadolint/hadolint-action@v3.3.0
+        with:
+          dockerfile: Dockerfile
+          ignore: DL3059
+      - name: Update Pull Request
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const output = `
+            #### Hadolint: \`${{ steps.hadolint.outcome }}\`
+            \`\`\`
+            ${process.env.HADOLINT_RESULTS}
+            \`\`\`
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
